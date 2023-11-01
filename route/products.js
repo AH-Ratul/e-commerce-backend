@@ -7,9 +7,16 @@ route.use(express.json());
 
 // GET route to fetch products
 route.get("/", async (req, res) => {
+  const id = req.query.id;
   try {
-    const result = await adminCollection.find().toArray();
-    res.json(result);
+    if (!id) {
+      const result = await adminCollection.find().toArray();
+      res.json(result);
+    } else {
+      const query = { id: id };
+      const result = await adminCollection.find(query).toArray();
+      res.json(result);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error fetching products" });
